@@ -39,7 +39,7 @@
 
 - (void)startScan{
     NSLog(@"Start Scan");
-    [_manager scanForPeripheralsWithServices:@[[CBUUID UUIDWithString:@"C70CB8F3-BB87-4412-B2D4-A90702ABDA0F"]] options:@{ CBCentralManagerScanOptionAllowDuplicatesKey : [NSNumber numberWithBool:YES] }];
+    [_manager scanForPeripheralsWithServices:@[[CBUUID UUIDWithString:ANCS_SERVICE]] options:@{ CBCentralManagerScanOptionAllowDuplicatesKey : [NSNumber numberWithBool:YES] }];
 }
 
 - (NSData *)buildCommandForGettingNotificationWithUID:(NSData *)uidData Attributes:(NSArray *)reqAttr
@@ -181,11 +181,12 @@
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error{
     for (CBService *aService in peripheral.services){
         
-        if ([aService.UUID isEqual:[CBUUID UUIDWithString:@"C70CB8F3-BB87-4412-B2D4-A90702ABDA0F"]]) {
+        if ([aService.UUID isEqual:[CBUUID UUIDWithString:CONTROL_POINT]]) {
             NSLog(@"Found Control");
             [peripheral discoverCharacteristics:nil forService:aService];
         }
         if ([aService.UUID isEqual:[CBUUID UUIDWithString:ANCS_SERVICE]]) {
+            NSLog(@"Found Service - not expected");
             [peripheral discoverCharacteristics:nil forService:aService];
         }
     }
